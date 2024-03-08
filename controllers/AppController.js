@@ -1,22 +1,16 @@
-// controllers/AppController.js
-
-import dbClient from '../utils/db';
 import redisClient from '../utils/redis';
+import dbClient from '../utils/db';
 
 class AppController {
-  static async getStatus(req, res) {
-    const redisAlive = await redisClient.isAlive();
-    const dbAlive = await dbClient.isAlive();
-
-    return res.status(200).json({ redis: redisAlive, db: dbAlive });
+  static getStatus(request, response) {
+    response.status(200).json({ redis: redisClient.isAlive(), db: dbClient.isAlive() });
   }
 
-  static async getStats(req, res) {
-    const nbUsers = await dbClient.nbUsers();
-    const nbFiles = await dbClient.nbFiles();
-
-    return res.status(200).json({ users: nbUsers, files: nbFiles });
+  static async getStats(request, response) {
+    const usersNum = await dbClient.nbUsers();
+    const filesNum = await dbClient.nbFiles();
+    response.status(200).json({ users: usersNum, files: filesNum });
   }
 }
 
-export default AppController;
+module.exports = AppController;
